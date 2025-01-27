@@ -33,7 +33,6 @@ void *qsort_thread(void *arg) {
 void qsort_parallel(void *base, size_t n, size_t es, int (*cmp)(const void *, const void *)) {
     char *a = (char *)base;
     if (n < 7) {
-        // 使用插入排序处理小数组
         for (char *pm = a + es; pm < a + n * es; pm += es) {
             for (char *pl = pm; pl > a && cmp(pl - es, pl) > 0; pl -= es) {
                 char tmp[es];
@@ -45,7 +44,6 @@ void qsort_parallel(void *base, size_t n, size_t es, int (*cmp)(const void *, co
         return;
     }
 
-    // 基准选择
     char *pm = a + (n / 2) * es;
     char *pl = a;
     char *pn = a + (n - 1) * es;
@@ -56,7 +54,6 @@ void qsort_parallel(void *base, size_t n, size_t es, int (*cmp)(const void *, co
     }
     pm = pm - ((cmp(pm, pn) < 0) ? es : 0);
 
-    // 分区
     char *pa, *pb, *pc, *pd;
     pa = pb = a + es;
     pc = pd = a + (n - 1) * es;
@@ -74,13 +71,11 @@ void qsort_parallel(void *base, size_t n, size_t es, int (*cmp)(const void *, co
         pc -= es;
     }
 
-    // 交换基准
     char tmp[es];
     memcpy(tmp, a, es);
     memcpy(a, pc, es);
     memcpy(pc, tmp, es);
-
-    // 子区间递归
+    
     size_t left_size = (pc - a) / es;
     size_t right_size = n - left_size - 1;
 
